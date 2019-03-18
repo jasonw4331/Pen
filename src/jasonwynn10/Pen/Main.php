@@ -11,7 +11,6 @@ namespace jasonwynn10\Pen;
 If I use a UI, then it will be dependant on an API from a virion or other plugin but if I use a sign interface, the plugin must hook on datapackets directly
 */
 
-use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\inventory\ShapedRecipe;
 use pocketmine\item\ItemFactory;
@@ -37,6 +36,10 @@ class Main extends PluginBase implements Listener {
 		$currentUUIDPacks = $property->getValue($manager);
 		$currentUUIDPacks[strtolower($pack->getPackId())] = $pack;
 		$property->setValue($manager, $currentUUIDPacks);
+
+		$property = $reflection->getProperty("serverForceResources");
+		$property->setAccessible(true);
+		$property->setValue($manager, true);
 	}
 	public function onEnable() {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -70,14 +73,6 @@ class Main extends PluginBase implements Listener {
 		if(isset($currentResourcePacks[strtolower($pack->getPackId())])) {
 			unset($currentUUIDPacks[strtolower($pack->getPackId())]);
 			$property->setValue($manager, $currentUUIDPacks);
-		}
-	}
-
-	public function onTransaction(InventoryTransactionEvent $event) {
-		foreach($event->getTransaction()->getInventories() as $inventory) {
-			if($inventory->getName() === "Pen") {
-				// TODO:
-			}
 		}
 	}
 }
