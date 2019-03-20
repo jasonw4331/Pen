@@ -4,8 +4,12 @@ namespace jasonwynn10\Pen;
 
 use jojoe77777\FormAPI\CustomForm;
 use jojoe77777\FormAPI\SimpleForm;
+use pocketmine\block\Air;
 use pocketmine\block\Block;
 use pocketmine\item\Durable;
+use pocketmine\item\enchantment\Enchantment;
+use pocketmine\item\enchantment\EnchantmentInstance;
+use pocketmine\item\Item;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 
@@ -31,62 +35,88 @@ class Pen extends Durable {
 	 */
 	public function onActivate(Player $player, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector) : bool {
 		if($player->hasPermission("pen.use")) {
-			// TODO: task delay?
-			$form = new SimpleForm(function(Player $player, $data) {
-				var_dump($data);
+			/** @var Item[] $arr */
+			$items = [];
+			/** @var int[] $slots */
+			$slots = [];
+			$form = new SimpleForm(function($player, $data){});
+			foreach($player->getInventory()->getContents(true) as $slot => $item) {
+				if(!$item instanceof Pen and $item->getCount() === 1 and !$item instanceof Air) {
+					$form->addButton($item->getName());
+					$items[] = $item;
+					$slots[] = $slot;
+				}
+				if(!$item instanceof Pen and $item->getCount() > 1 and !$item instanceof Air) {
+					$form->addButton($item->getName() . " x".$item->getCount());
+					$items[] = $item;
+					$slots[] = $slot;
+				}
+			}
+			$form->setCallable(function(Player $player, $data) use ($items, $slots) {
 				if($data === null)
 					return;
-				$form = new SimpleForm(function(Player $player, $data) {
-					var_dump($data);
+				/** @var Item $item */
+				$item = clone $items[$data];
+				$slot = $slots[$data];
+				$form = new SimpleForm(function(){});
+				$form->setTitle("Pen Selection");
+				$form->addButton("Write Enchantment");
+				$form->addButton("Write Lore");
+				$form->setCallable(function(Player $player, $data) use($item, $slot) {
 					if($data === null)
 						return;
 					if($data == 0) {
-						$form = new CustomForm(function(Player $player, $data) {
-							var_dump($data);
-							if($data === null)
-								return;
-							// TODO: do not add if no input
-							// TODO: roman numeral converter
-							$this->applyDamage(1);
-						});
+						$form = new CustomForm(function(){});
 						$form->setTitle("Enchantments");
 						$i = 1;
-						foreach($this->getEnchantments() as $enchantment) {
+						foreach($item->getEnchantments() as $enchantment) {
 							$form->addInput("Enchantment Slot ".$i++, "", $enchantment->getType()->getName());
 						}
 						$form->addInput("Enchantment Slot ".$i++);
 						$form->addInput("Enchantment Slot ".$i++);
 						$form->addInput("Enchantment Slot ".$i++);
 						$form->addInput("Enchantment Slot ".$i);
-						$player->sendForm($form);
-					}else{
-						$form = new CustomForm(function($data) use ($player) {
-							var_dump($data);
-							// TODO: do not add if no input
+						$form->setCallable(function(Player $player, $data) use($item, $slot) {
+							if($data === null and !is_array($data))
+								return;
+							foreach($data as $string) {
+								$parse = explode(" ", $string);
+								if($parse === false or count($parse) > 2)
+									continue;
+								$ench = Enchantment::getEnchantmentByName($parse[0]);
+								// TODO: roman numeral converter
+								if($ench !== null)
+									$item->addEnchantment(new EnchantmentInstance($ench, (int)($parse[1] ?? 1)));
+								$player->getInventory()->setItem($slot, $item, false);
+							}
+							$player->getInventory()->sendContents($player);
 							$this->applyDamage(1);
 						});
+						$player->sendForm($form);
+					}else{
+						$form = new CustomForm(function(){});
 						$form->setTitle("Lore Text");
 						$i = 1;
-						foreach($this->getLore() as $line) {
+						foreach($item->getLore() as $line) {
 							$form->addInput("Line ".$i++, "", $line);
 						}
 						$form->addInput("Line ".$i++);
 						$form->addInput("Line ".$i++);
 						$form->addInput("Line ".$i++);
 						$form->addInput("Line ".$i);
+						$form->setCallable(function(Player $player, $data) use ($item, $slot) {
+							$output = array_filter($data, function($data){
+								return is_string($data) and !empty($data);
+							});
+							$item->setLore($output);
+							$player->getInventory()->setItem($slot, $item);
+							$this->applyDamage(1);
+						});
 						$player->sendForm($form);
 					}
 				});
-				$form->setTitle("Pen Selection");
-				$form->addButton("Write Enchantment");
-				$form->addButton("Write Lore");
 				$player->sendForm($form);
 			});
-			foreach($player->getInventory()->getContents() as $item) {
-				if(!$item instanceof Pen and $item->getCount() > 1) {
-					$form->addButton($item->getName());
-				}
-			}
 			$player->sendForm($form);
 		}
 		return true;
