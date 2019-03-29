@@ -41,6 +41,7 @@ class Main extends PluginBase implements Listener {
 		$property->setAccessible(true);
 		$property->setValue($manager, true);
 	}
+
 	public function onEnable() {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$maxUses = (int) $this->getConfig()->get("max-uses", 1);
@@ -52,6 +53,7 @@ class Main extends PluginBase implements Listener {
 				[ItemFactory::get(ItemIds::SADDLE)]) // TODO: result lore
 		);
 	}
+
 	public function onDisable() {
 		$manager = $this->getServer()->getResourcePackManager();
 		$pack = new ZippedResourcePack($this->getFile()."resources/PenPlugin.mcpack");
