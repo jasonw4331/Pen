@@ -13,6 +13,7 @@ If I use a UI, then it will be dependant on an API from a virion or other plugin
 
 use pocketmine\event\Listener;
 use pocketmine\inventory\ShapedRecipe;
+use pocketmine\inventory\ShapelessRecipe;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\plugin\PluginBase;
@@ -46,9 +47,22 @@ class Main extends PluginBase implements Listener {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$maxUses = (int) $this->getConfig()->get("max-uses", 1);
 		ItemFactory::registerItem(new Pen($maxUses), true);
-		$this->getServer()->getCraftingManager()->registerShapedRecipe(
+		$manager = $this->getServer()->getCraftingManager();
+		$manager->registerShapedRecipe(
+			new ShapedRecipe(
+				["A","A","B"],
+				["A" => ItemFactory::get(ItemIds::IRON_INGOT), "B" => ItemFactory::get(ItemIds::DYE, 0)],
+				[ItemFactory::get(ItemIds::SADDLE)]) // TODO: result lore
+		);
+		$manager->registerShapedRecipe(
 			new ShapedRecipe(
 				[" A"," A"," B"],
+				["A" => ItemFactory::get(ItemIds::IRON_INGOT), "B" => ItemFactory::get(ItemIds::DYE, 0)],
+				[ItemFactory::get(ItemIds::SADDLE)]) // TODO: result lore
+		);
+		$manager->registerShapedRecipe(
+			new ShapedRecipe(
+				["  A","  A","  B"],
 				["A" => ItemFactory::get(ItemIds::IRON_INGOT), "B" => ItemFactory::get(ItemIds::DYE, 0)],
 				[ItemFactory::get(ItemIds::SADDLE)]) // TODO: result lore
 		);

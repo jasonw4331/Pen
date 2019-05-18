@@ -21,7 +21,7 @@ class Pen extends Durable {
 		$this->maxDurability = $uses;
 		$this->name = "Pen";
 		$this->setCustomName("Pen");
-		$this->setLore([""]);
+		$this->setLore(["Writes Enchantments and Lore onto items"]);
 	}
 
 	/**
@@ -105,7 +105,7 @@ class Pen extends Durable {
 						$form->addInput("Line ".$i++);
 						$form->addInput("Line ".$i);
 						$form->setCallable(function(Player $player, $data) use ($item, $slot) {
-							$output = array_filter($data, function($data){
+							$output = array_filter($data, function($data) {
 								return is_string($data) and !empty($data);
 							});
 							$item->setLore($output);
