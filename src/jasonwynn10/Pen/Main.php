@@ -55,19 +55,19 @@ class Main extends PluginBase implements Listener {
 			new ShapedRecipe(
 				["A","A","B"],
 				["A" => ItemFactory::get(ItemIds::IRON_INGOT), "B" => ItemFactory::get(ItemIds::DYE, 0)],
-				[ItemFactory::get(ItemIds::SADDLE)]) // TODO: result lore
+				[ItemFactory::get(ItemIds::SADDLE)->setLore(["Writes Enchantments, Lore, and Names onto items"])])
 		);
 		$manager->registerShapedRecipe(
 			new ShapedRecipe(
 				[" A"," A"," B"],
 				["A" => ItemFactory::get(ItemIds::IRON_INGOT), "B" => ItemFactory::get(ItemIds::DYE, 0)],
-				[ItemFactory::get(ItemIds::SADDLE)]) // TODO: result lore
+				[ItemFactory::get(ItemIds::SADDLE)->setLore(["Writes Enchantments, Lore, and Names onto items"])])
 		);
 		$manager->registerShapedRecipe(
 			new ShapedRecipe(
 				["  A","  A","  B"],
 				["A" => ItemFactory::get(ItemIds::IRON_INGOT), "B" => ItemFactory::get(ItemIds::DYE, 0)],
-				[ItemFactory::get(ItemIds::SADDLE)]) // TODO: result lore
+				[ItemFactory::get(ItemIds::SADDLE)->setLore(["Writes Enchantments, Lore, and Names onto items"])])
 		);
 	}
 

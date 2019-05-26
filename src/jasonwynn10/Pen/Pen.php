@@ -21,7 +21,7 @@ class Pen extends Durable {
 		$this->maxDurability = $uses;
 		$this->name = "Pen";
 		$this->setCustomName("Pen");
-		$this->setLore(["Writes Enchantments and Lore onto items"]);
+		$this->setLore(["Writes Enchantments, Lore, and Names onto items"]);
 	}
 
 	/**
