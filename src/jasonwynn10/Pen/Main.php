@@ -20,9 +20,12 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\resourcepacks\ZippedResourcePack;
 
 class Main extends PluginBase implements Listener {
+	/** @var ZippedResourcePack $pack **/
+	private $pack;
+
 	public function onLoad() {
 		$manager = $this->getServer()->getResourcePackManager();
-		$pack = new ZippedResourcePack($this->getFile()."resources/PenPlugin.mcpack");
+		$this->pack = $pack = new ZippedResourcePack($this->getFile()."resources/PenPlugin.mcpack");
 
 		$reflection = new \ReflectionClass($manager);
 
@@ -70,7 +73,7 @@ class Main extends PluginBase implements Listener {
 
 	public function onDisable() {
 		$manager = $this->getServer()->getResourcePackManager();
-		$pack = new ZippedResourcePack($this->getFile()."resources/PenPlugin.mcpack");
+		$pack = $this->pack;
 
 		$reflection = new \ReflectionClass($manager);
 

@@ -62,6 +62,7 @@ class Pen extends Durable {
 				$form->setTitle("Pen Selection");
 				$form->addButton("Write Enchantment");
 				$form->addButton("Write Lore");
+				$form->addButton("Rename Item");
 				$form->setCallable(function(Player $player, $data) use($item, $slot) {
 					if($data === null)
 						return;
@@ -93,7 +94,7 @@ class Pen extends Durable {
 							$this->applyDamage(1);
 						});
 						$player->sendForm($form);
-					}else{
+					}elseif($data == 1) {
 						$form = new CustomForm(function(){});
 						$form->setTitle("Lore Text");
 						$i = 1;
@@ -111,6 +112,19 @@ class Pen extends Durable {
 							$item->setLore($output);
 							$player->getInventory()->setItem($slot, $item);
 							$this->applyDamage(1);
+						});
+						$player->sendForm($form);
+					}else{
+						$form = new CustomForm(function(){});
+						$form->setTitle("Rename Item");
+						$form->addInput("New Name", $item->getName());
+						$form->setCallable(function(Player $player, $data) use ($item, $slot) {
+							$output = array_filter($data, function($data) {
+								return is_string($data) and !empty($data);
+							});
+							if(isset($output[0]))
+								$item->setCustomName($output[0]);
+							$player->getInventory()->setItem($slot, $item);
 						});
 						$player->sendForm($form);
 					}
