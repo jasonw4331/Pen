@@ -13,6 +13,7 @@ If I use a UI, then it will be dependant on an API from a virion or other plugin
 
 use pocketmine\event\Listener;
 use pocketmine\inventory\ShapedRecipe;
+use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\plugin\PluginBase;
@@ -50,6 +51,7 @@ class Main extends PluginBase implements Listener {
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$maxUses = (int) $this->getConfig()->get("max-uses", 1);
 		ItemFactory::registerItem(new Pen($maxUses), true);
+		Item::addCreativeItem(ItemFactory::get(ItemIds::SADDLE));
 		$manager = $this->getServer()->getCraftingManager();
 		$manager->registerShapedRecipe(
 			new ShapedRecipe(
