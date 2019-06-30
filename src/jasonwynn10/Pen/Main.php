@@ -13,7 +13,6 @@ If I use a UI, then it will be dependant on an API from a virion or other plugin
 
 use pocketmine\event\Listener;
 use pocketmine\inventory\ShapedRecipe;
-use pocketmine\inventory\ShapelessRecipe;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\plugin\PluginBase;
@@ -24,8 +23,9 @@ class Main extends PluginBase implements Listener {
 	private $pack;
 
 	public function onLoad() {
+		$this->saveResource("PenPlugin.mcpack");
 		$manager = $this->getServer()->getResourcePackManager();
-		$this->pack = $pack = new ZippedResourcePack($this->getFile()."resources/PenPlugin.mcpack");
+		$this->pack = $pack = new ZippedResourcePack($this->getDataFolder()."PenPlugin.mcpack");
 
 		$reflection = new \ReflectionClass($manager);
 
@@ -93,5 +93,6 @@ class Main extends PluginBase implements Listener {
 			unset($currentUUIDPacks[strtolower($pack->getPackId())]);
 			$property->setValue($manager, $currentUUIDPacks);
 		}
+		unlink($this->getDataFolder()."PenPlugin.mcpack");
 	}
 }
