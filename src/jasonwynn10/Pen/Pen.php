@@ -91,7 +91,8 @@ class Pen extends Durable {
 								$player->getInventory()->setItem($slot, $item, false);
 							}
 							$player->getInventory()->sendContents($player);
-							$this->applyDamage(1);
+							if($player->isSurvival())
+								$this->applyDamage(1);
 						});
 						$player->sendForm($form);
 					}elseif($data == 1) {
@@ -111,7 +112,8 @@ class Pen extends Durable {
 							});
 							$item->setLore($output);
 							$player->getInventory()->setItem($slot, $item);
-							$this->applyDamage(1);
+							if($player->isSurvival())
+								$this->applyDamage(1);
 						});
 						$player->sendForm($form);
 					}else{
