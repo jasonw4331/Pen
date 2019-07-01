@@ -157,6 +157,7 @@ class Pen extends Durable {
 	 * @return int
 	 */
 	public function romanToArabic(string $number) : int{
+		$number = strtoupper($number);
 		$conversion = [
 			'M' => 1000,
 			'CM' => 900,
@@ -173,11 +174,10 @@ class Pen extends Durable {
 			'I' => 1
 		];
 		$result = 0;
-
 		foreach ($conversion as $rom => $arb) {
 			while (strpos($number, $rom) === 0) {
 				$result += $arb;
-				$roman = substr($number, strlen($rom));
+				$number = substr($number, strlen($rom));
 			}
 		}
 		return $result;
