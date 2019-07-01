@@ -82,7 +82,7 @@ class Pen extends Durable {
 								return;
 							foreach($data as $string) {
 								$parse = explode(" ", $string);
-								if($parse === false or count($parse) > 2)
+								if($parse === false or count($parse) > 2 or substr($parse[0], 0, 1) === "%")
 									continue;
 								$ench = Enchantment::getEnchantmentByName($parse[0]);
 								if(isset($parse[1]) and !is_numeric($parse[1])) {
