@@ -85,7 +85,9 @@ class Pen extends Durable {
 								if($parse === false or count($parse) > 2)
 									continue;
 								$ench = Enchantment::getEnchantmentByName($parse[0]);
-								// TODO: roman numeral converter
+								if(!is_numeric($parse[1])) {
+									$parse[1] = $this->romanToArabic($parse[1]);
+								}
 								if($ench !== null)
 									$item->addEnchantment(new EnchantmentInstance($ench, (int)($parse[1] ?? 1)));
 								$player->getInventory()->setItem($slot, $item, false);
@@ -145,5 +147,37 @@ class Pen extends Durable {
 	 */
 	public function getMaxDurability() : int {
 		return $this->maxDurability;
+	}
+
+	/**
+	 * @param string $number
+	 *
+	 * @return int
+	 */
+	public function romanToArabic(string $number) : int{
+		$conversion = [
+			'M' => 1000,
+			'CM' => 900,
+			'D' => 500,
+			'CD' => 400,
+			'C' => 100,
+			'XC' => 90,
+			'L' => 50,
+			'XL' => 40,
+			'X' => 10,
+			'IX' => 9,
+			'V' => 5,
+			'IV' => 4,
+			'I' => 1
+		];
+		$result = 0;
+
+		foreach ($conversion as $rom => $arb) {
+			while (strpos($number, $rom) === 0) {
+				$result += $arb;
+				$roman = substr($number, strlen($rom));
+			}
+		}
+		return $result;
 	}
 }
