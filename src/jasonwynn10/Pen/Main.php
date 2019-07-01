@@ -24,7 +24,7 @@ class Main extends PluginBase implements Listener {
 	private $pack;
 
 	public function onLoad() {
-		$this->saveResource("PenPlugin.mcpack");
+		$this->saveResource("PenPlugin.mcpack", true);
 		$manager = $this->getServer()->getResourcePackManager();
 		$this->pack = $pack = new ZippedResourcePack($this->getDataFolder()."PenPlugin.mcpack");
 
