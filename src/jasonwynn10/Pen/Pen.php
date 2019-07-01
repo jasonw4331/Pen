@@ -85,11 +85,13 @@ class Pen extends Durable {
 								if($parse === false or count($parse) > 2)
 									continue;
 								$ench = Enchantment::getEnchantmentByName($parse[0]);
-								if(!is_numeric($parse[1])) {
-									$parse[1] = $this->romanToArabic($parse[1]);
+								if(isset($parse[1]) and !is_numeric($parse[1])) {
+									$level = $this->romanToArabic($parse[1]);
+								}else{
+									$level = $parse[1] ?? 1;
 								}
 								if($ench !== null)
-									$item->addEnchantment(new EnchantmentInstance($ench, (int)($parse[1] ?? 1)));
+									$item->addEnchantment(new EnchantmentInstance($ench, (int)$level));
 								$player->getInventory()->setItem($slot, $item, false);
 							}
 							$player->getInventory()->sendContents($player);
